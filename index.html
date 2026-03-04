@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>OZN · Inovação e Excelência</title>
+    <!-- Google Fonts + Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f2f5 0%, #ffffff 100%);
+            color: #1e1e1e;
+            line-height: 1.5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== EFEITO LIQUID GLASS OTIMIZADO ===== */
+        .glass, .navbar, .card, button, .menu-mobile {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255,255,255,0.6);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+        }
+
+        /* micro-animação líquida mais fluida */
+        .glass::after, .card::after, button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+            border-radius: inherit;
+            mix-blend-mode: overlay;
+        }
+
+        .glass:hover::after, .card:hover::after, button:hover::after {
+            opacity: 1;
+        }
+
+        /* animação de reveal mais suave */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== NAVBAR FLUIDA ===== */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            z-index: 1000;
+            border-radius: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, background 0.4s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.25);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: #1e1e1e;
+            text-decoration: none;
+            background: linear-gradient(135deg, #2c2c2c, #5a5a5a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: letter-spacing 0.3s ease;
+        }
+
+        .logo:hover {
+            letter-spacing: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 48px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2e2e2e;
+            font-weight: 400;
+            font-size: 1rem;
+            position: relative;
+            padding: 6px 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 1.5px;
+            background: #2c2c2c;
+            transition: width 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        .btn-agendar {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255,255,255,0.9);
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            cursor: pointer;
+            display: inline-block;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-agendar:hover {
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 12px 28px -8px rgba(0,0,0,0.2);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .btn-agendar:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        /* menu hamburguer mobile */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            transition: background 0.3s ease;
+        }
+
+        .hamburger:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 2px;
+            background-color: #1e1e1e;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            border-radius: 4px;
+        }
+
+        .menu-mobile {
+            display: none;
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 32px;
+            padding: 24px;
+            flex-direction: column;
+            gap: 24px;
+            z-index: 999;
+            border: 1px solid rgba(255,255,255,0.8);
+            transform: translateY(-30px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            pointer-events: none;
+            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.3);
+        }
+
+        .menu-mobile.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .menu-mobile a {
+            text-decoration: none;
+            color: #1e1e1e;
+            font-size: 1.2rem;
+            font-weight: 400;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: padding 0.3s ease, background 0.3s ease;
+            border-radius: 16px;
+        }
+
+        .menu-mobile a:last-child {
+            border-bottom: none;
+        }
+
+        .menu-mobile a:hover {
+            padding-left: 16px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ===== LAYOUT PRINCIPAL FLUIDO ===== */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        section {
+            padding: 120px 0 80px;
+            min-height: auto;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        /* HERO */
+        .hero {
+            padding-top: 160px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 12vw, 5.2rem);
+            font-weight: 300;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            color: #181818;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .hero h1 span {
+            font-weight: 700;
+            background: linear-gradient(145deg, #2d2d2d, #4f4f4f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            font-weight: 300;
+            color: #3a3a3a;
+            margin: 32px 0 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1.2s ease 0.1s both;
+        }
+
+        .btn-hero {
+            padding: 18px 48px;
+            font-size: 1.2rem;
+            border-radius: 60px;
+            background: rgba(255,255,255,0.4);
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.15);
+            animation: fadeInUp 1.2s ease 0.2s both;
+        }
+
+        /* CARDS SERVIÇOS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .card {
+            padding: 40px 28px;
+            border-radius: 36px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.6);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            will-change: transform;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 30px 40px -20px rgba(0,0,0,0.3);
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            color: #2b2b2b;
+            margin-bottom: 24px;
+            background: rgba(255,255,255,0.4);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+            backdrop-filter: blur(4px);
+            transition: transform 0.5s ease, background 0.3s ease;
+        }
+
+        .card:hover i {
+            transform: scale(1.1) rotate(5deg);
+            background: rgba(255,255,255,0.6);
+        }
+
+        .card h3 {
+            font-size: 1.7rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .card p {
+            color: #2c2c2c;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* SEÇÃO CASES (2 COLUNAS) */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .cases h2 {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            font-weight: 300;
+            margin-bottom: 28px;
+            color: #1e1e1e;
+        }
+
+        .cases h2 strong {
+            font-weight: 700;
+        }
+
+        .cases-text p {
+            font-size: 1.1rem;
+            color: #3d3d3d;
+            margin-bottom: 32px;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 24px;
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: transform 0.4s ease, background 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.25);
+        }
+
+        .stat-item .numero {
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            font-weight: 600;
+            color: #1e1e1e;
+        }
+
+        .stat-item .label {
+            font-weight: 300;
+            color: #3b3b3b;
+            margin-top: 6px;
+        }
+
+        .right-col {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 48px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.6);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.5s ease;
+        }
+
+        .right-col:hover {
+            transform: scale(1.02);
+        }
+
+        .right-col i {
+            font-size: 4rem;
+            color: #2c2c2c;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            transition: transform 0.5s ease;
+        }
+
+        .right-col:hover i {
+            transform: rotate(-5deg) scale(1.1);
+        }
+
+        /* ===== MOBILE FLUIDO ===== */
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .navbar .btn-agendar {
+                display: none;
+            }
+
+            .menu-mobile {
+                display: flex;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            section {
+                padding: 100px 0 60px;
+            }
+
+            .hero {
+                padding-top: 140px;
+            }
+
+            .card {
+                padding: 32px 24px;
+            }
+
+            .stats-grid {
+                gap: 16px;
+            }
+
+            .stat-item {
+                padding: 20px;
+            }
+
+            .right-col {
+                padding: 32px;
+                min-height: auto;
+            }
+
+            .btn-hero {
+                padding: 16px 32px;
+                font-size: 1.1rem;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .hero-content .btn-hero {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        /* Ajustes para telas muito pequenas */
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 10px 16px;
+                top: 15px;
+                left: 15px;
+                right: 15px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+                letter-spacing: 3px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-sub {
+                font-size: 1rem;
+                margin: 24px 0 32px;
+            }
+
+            .card i {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+            }
+
+            .card h3 {
+                font-size: 1.4rem;
+            }
+
+            .menu-mobile {
+                left: 15px;
+                right: 15px;
+                padding: 20px;
+            }
+
+            .menu-mobile a {
+                font-size: 1.1rem;
+                padding: 14px 0;
+            }
+        }
+
+        /* otimizações de toque para mobile */
+        .btn-agendar, .hamburger, .menu-mobile a, .card {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        /* animações de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .no-footer {
+            padding-bottom: 80px;
+        }
+
+        i, .fas, .far {
+            font-style: normal;
+        }
+
+        /* scroll suave */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* esconder menu mobile por padrão */
+        .menu-mobile {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR FLUIDA -->
+    <nav class="navbar glass" id="navbar">
+        <a href="#" class="logo">OZN</a>
+        
+        <ul class="nav-links">
+            <li><a href="#">Início</a></li>
+            <li><a href="#servicos">Serviços</a></li>
+            <li><a href="#cases">Cases</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+
+        <a href="https://wa.me/5544997630042?text=Olá,%20gostaria%20de%20agendar%20uma%20reunião%20com%20a%20OZN." class="btn-agendar" target="_blank">Agendar reunião</a>
+
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- MENU MOBILE -->
+    <div class="menu-mobile" id="menuMobile">
+        <a href="#">Início</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#cases">Cases</a>
+        <a href="#contato">Contato</a>
+        <a href="https://wa.me/5544997630042?text=Olá,%20gostaria%20de%20agendar%20uma%20reunião%20com%20a%20OZN." class="btn-agendar" style="text-align: center; margin-top: 10px;">Agendar reunião</a>
+    </div>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero" id="inicio">
+            <div class="container reveal">
+                <div class="hero-content">
+                    <h1><span>OZN</span><br>inovação em cada detalhe</h1>
+                    <p class="hero-sub">Mais de 120 projetos entregues com excelência — transformamos marcas por meio de design estratégico e tecnologia de ponta.</p>
+                    <a href="https://wa.me/5544997630042?text=Olá,%20gostaria%20de%20agendar%20uma%20reunião%20com%20a%20OZN." class="btn-agendar btn-hero" target="_blank">Agendar reunião</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVIÇOS -->
+        <section id="servicos">
+            <div class="container reveal">
+                <div class="cards-grid">
+                    <div class="card glass">
+                        <i class="fas fa-bezier-curve"></i>
+                        <h3>Design Estratégico</h3>
+                        <p>Interfaces que convertem. Projetamos experiências digitais centradas no usuário, alinhadas à identidade da sua marca.</p>
+                    </div>
+                    <div class="card glass">
+                        <i class="fas fa-code"></i>
+                        <h3>Desenvolvimento Sob Medida</h3>
+                        <p>Sites e plataformas de alta performance, com código limpo e escalável para seu negócio crescer sem limites.</p>
+                    </div>
+                    <div class="card glass">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Estratégia Digital</h3>
+                        <p>Da ideação à execução: posicionamento, branding e marketing para marcas que buscam liderança.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CASES / DIFERENCIAIS -->
+        <section id="cases">
+            <div class="container reveal">
+                <div class="two-col">
+                    <div class="cases-text">
+                        <h2><strong>+120</strong> cases de sucesso</h2>
+                        <p>Não entregamos apenas sites — criamos ecossistemas digitais que geram resultados reais. Nossos clientes estão em posição de destaque, e a taxa de aprovação dos nossos projetos é de 100%.</p>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="numero">+8 anos</div>
+                                <div class="label">de estrada</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="numero">150+</div>
+                                <div class="label">projetos entregues</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="numero">98%</div>
+                                <div class="label">clientes recorrentes</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="numero">12</div>
+                                <div class="label">prêmios de design</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right-col glass">
+                        <i class="fas fa-quote-right"></i>
+                        <h3 style="font-weight: 300; font-size: clamp(1.8rem, 4vw, 2rem); margin-bottom: 20px;">Pronto para o próximo nível?</h3>
+                        <p style="font-size: 1.1rem; color: #2b2b2b;">Sua empresa merece uma presença digital única. Conversamos sobre seu projeto sem compromisso.</p>
+                        <a href="https://wa.me/5544997630042?text=Olá,%20gostaria%20de%20agendar%20uma%20reunião%20com%20a%20OZN." class="btn-agendar" style="margin-top: 30px; align-self: flex-start;" target="_blank">Agendar reunião</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTATO (sem footer) -->
+        <section id="contato" style="min-height: auto; padding-bottom: 100px;">
+            <div class="container reveal" style="text-align: center;">
+                <h2 style="font-weight: 300; font-size: clamp(2rem, 6vw, 2.8rem); color: #1e1e1e;">Vamos criar juntos?</h2>
+                <p style="font-size: clamp(1rem, 3vw, 1.2rem); color: #3b3b3b; max-width: 600px; margin: 30px auto;">Sua visão, nossa execução. Um clique separa você do próximo grande projeto.</p>
+                <a href="https://wa.me/5544997630042?text=Olá,%20gostaria%20de%20agendar%20uma%20reunião%20com%20a%20OZN." class="btn-agendar btn-hero" target="_blank">Agendar reunião</a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // REVEAL AO SCROLL MAIS SUAVE
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveal.getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (revealTop < windowHeight - revealPoint) {
+                    reveal.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            requestAnimationFrame(revealOnScroll);
+        });
+        window.addEventListener('load', revealOnScroll);
+        window.addEventListener('resize', revealOnScroll);
+
+        // NAVBAR SCROLL EFFECT
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // MENU HAMBURGUER FLUIDO
+        const hamburger = document.getElementById('hamburger');
+        const menuMobile = document.getElementById('menuMobile');
+
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuMobile.classList.toggle('active');
+            
+            const spans = hamburger.querySelectorAll('span');
+            if (menuMobile.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translate(8px, 6px)';
+                spans[1].style.opacity = '0';
+                spans[1].style.transform = 'translateX(10px)';
+                spans[2].style.transform = 'rotate(-45deg) translate(8px, -6px)';
+            } else {
+                spans[0].style.transform = '';
+                spans[1].style.opacity = '1';
+                spans[1].style.transform = '';
+                spans[2].style.transform = '';
+            }
+        });
+
+        // fechar menu ao clicar em link
+        document.querySelectorAll('.menu-mobile a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuMobile.classList.remove('active');
+                const spans = hamburger.querySelectorAll('span');
+                spans[0].style.transform = '';
+                spans[1].style.opacity = '1';
+                spans[1].style.transform = '';
+                spans[2].style.transform = '';
+            });
+        });
+
+        // fechar menu ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!menuMobile.contains(e.target) && !hamburger.contains(e.target) && menuMobile.classList.contains('active')) {
+                menuMobile.classList.remove('active');
+                const spans = hamburger.querySelectorAll('span');
+                spans[0].style.transform = '';
+                spans[1].style.opacity = '1';
+                spans[1].style.transform = '';
+                spans[2].style.transform = '';
+            }
+        });
+
+        // suavizar ancora
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
